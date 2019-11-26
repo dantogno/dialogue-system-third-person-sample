@@ -11,6 +11,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
     private float movementInputThreshold = 0.1f;
     private Animator animator;
     private float yInput;
+    private int sprintAnimParameter = Animator.StringToHash("IsSprinting");
     private int forwardAnimParameter = Animator.StringToHash("Forward");
     private void Awake()
     {
@@ -26,5 +27,7 @@ public class ThirdPersonCharacterController : MonoBehaviour
             newRotation.y = mainCameraTransform.eulerAngles.y;
             transform.eulerAngles = newRotation;
         }
+        bool isSprinting = yInput > movementInputThreshold && Input.GetButton("Sprint");
+        animator.SetBool(sprintAnimParameter, isSprinting);        
     }
 }
