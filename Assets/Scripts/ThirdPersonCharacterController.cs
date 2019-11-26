@@ -19,15 +19,46 @@ public class ThirdPersonCharacterController : MonoBehaviour
     }
     private void Update()
     {
-        yInput = Input.GetAxis("Vertical");
-        animator.SetFloat(forwardAnimParameter, yInput);
+        GetMovementInput();
+        UpdateForwardAnimParameter();
+        UpdateRotation();
+        UpdateSprintAnimParameter();
+    }
+
+    private void UpdateSprintAnimParameter()
+    {
+        bool isSprinting = yInput > movementInputThreshold && Input.GetButton("Sprint");
+        animator.SetBool(sprintAnimParameter, isSprinting);
+    }
+
+    private void UpdateRotation()
+    {
         if (Mathf.Abs(yInput) > movementInputThreshold)
         {
             var newRotation = transform.eulerAngles;
             newRotation.y = mainCameraTransform.eulerAngles.y;
             transform.eulerAngles = newRotation;
         }
-        bool isSprinting = yInput > movementInputThreshold && Input.GetButton("Sprint");
-        animator.SetBool(sprintAnimParameter, isSprinting);        
+    }
+
+    private void UpdateForwardAnimParameter()
+    {
+        animator.SetFloat(forwardAnimParameter, yInput);
+    }
+
+    private void GetMovementInput()
+    {
+        yInput = Input.GetAxis("Vertical");
+    }
+
+    private void OnDisable()
+    {
+        ResetAnimParameters();
+    }
+
+    private void ResetAnimParameters()
+    {
+        animator.SetFloat(forwardAnimParameter, 0);
+        animator.SetBool(sprintAnimParameter, false);
     }
 }
