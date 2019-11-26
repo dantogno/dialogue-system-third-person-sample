@@ -4,15 +4,27 @@ using UnityEngine;
 
 public class ThirdPersonCharacterController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField]
+    private Transform mainCameraTransform;
+    [Tooltip("How much input before the character starts moving")]
+    [SerializeField]
+    private float movementInputThreshold = 0.1f;
+    private Animator animator;
+    private float yInput;
+    private int forwardAnimParameter = Animator.StringToHash("Forward");
+    private void Awake()
     {
-        
+        animator = GetComponent<Animator>();
     }
-
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        yInput = Input.GetAxis("Vertical");
+        animator.SetFloat(forwardAnimParameter, yInput);
+        if (Mathf.Abs(yInput) > movementInputThreshold)
+        {
+            var newRotation = transform.eulerAngles;
+            newRotation.y = mainCameraTransform.eulerAngles.y;
+            transform.eulerAngles = newRotation;
+        }
     }
 }
